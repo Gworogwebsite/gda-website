@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 
@@ -40,7 +42,7 @@ export default function HistoryPage() {
         <div className="space-y-12 text-stone-300 text-sm sm:text-base leading-relaxed">
           
           <section className="p-8 rounded-2xl bg-stone-900/70 border border-stone-800">
-            <h2 className="text-2xl font-bold text-white mb-4">Origins & The Sanctuary of the Hills</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Origins &amp; The Sanctuary of the Hills</h2>
             <p className="mb-4 text-stone-400">
               The Gwòròg people, widely known across modern Nigeria as the Kagoro, are situated around the breathtaking Kagoro Hills in Southern Kaduna. For centuries, the massive rock formations and caves of the hills provided a natural fortress that shielded the community against historical incursions and slave raids.
             </p>
@@ -52,7 +54,7 @@ export default function HistoryPage() {
           <section className="p-8 rounded-2xl bg-stone-900/70 border border-stone-800">
             <h2 className="text-2xl font-bold text-white mb-4">The Afan National Festival</h2>
             <p className="mb-4 text-stone-400">
-              &quot;Afan&quot; translates to &quot;mountain&quot; or &quot;hill&quot; in the Gwòròg language. The Afan Festival is a historic cultural celebration held every 1st of January to mark the conquest of the hills, celebrate the close of the harvest season, and usher in the New Year.
+              &ldquo;Afan&rdquo; translates to &ldquo;mountain&rdquo; or &ldquo;hill&rdquo; in the Gwòròg language. The Afan Festival is a historic cultural celebration held every 1st of January to mark the conquest of the hills, celebrate the close of the harvest season, and usher in the New Year.
             </p>
             <p className="text-stone-400">
               Historically initiated when the people descended from the hilltop settlements to the lower plains, the festival has grown into one of Northern Nigeria&apos;s oldest and most prestigious cultural carnivals, featuring traditional dances, royal displays, hunting rituals, and mountaineering.
@@ -60,9 +62,9 @@ export default function HistoryPage() {
           </section>
 
           <section className="p-8 rounded-2xl bg-stone-900/70 border border-stone-800">
-            <h2 className="text-2xl font-bold text-white mb-4">Traditional Leadership & Continuity</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Traditional Leadership &amp; Continuity</h2>
             <p className="mb-4 text-stone-400">
-              Under the revered leadership of the Gwòròg Traditional Council led by His Highness the Chief of Kagoro, the chiefdom transitioned from colonial times into an educational and religious beacon in Northern Nigeria.
+              Under the revered leadership of the Gwòròg Traditional Council led by His Highness the Chief of Kagoro, the chiefdom transitioned into an educational and cultural beacon in Northern Nigeria.
             </p>
             <p className="text-stone-400">
               The Gwòròg Development Association (GDA) operates hand-in-hand with the traditional authority to ensure that modern advancements in technology and development stay rooted in timeless cultural pride.
@@ -71,20 +73,19 @@ export default function HistoryPage() {
 
         </div>
 
-        {/* Back Link */}
         <div className="mt-12 text-center">
           <Link
             href="/"
             className="text-xs text-stone-400 hover:text-emerald-400 transition-colors inline-flex items-center gap-1 font-semibold"
           >
-            ← Back to GDA Homepage
+            &larr; Back to GDA Homepage
           </Link>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="border-t border-stone-800 bg-stone-950 py-8 px-4 text-center text-stone-500 text-xs">
-        <p>© {new Date().getFullYear()} Gwòròg Development Association (GDA). All Rights Reserved.</p>
+        <p>&copy; 2026 Gwòròg Development Association (GDA). All Rights Reserved.</p>
       </footer>
     </div>
   );

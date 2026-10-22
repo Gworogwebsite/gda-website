@@ -328,7 +328,7 @@ export default function HomePage() {
             <Link href="/login" className="hover:text-stone-300 transition-colors">Member Portal</Link>
           </div>
           <div className="text-center md:text-right">
-            <p>© {new Date().getFullYear()} GDA. All Rights Reserved.</p>
+            <p>&copy; 2026 GDA. All Rights Reserved.</p>
             <p className="text-[10px] text-stone-600 mt-1">Built with Next.js & Firebase (Free Tier Architecture)</p>
           </div>
         </div>

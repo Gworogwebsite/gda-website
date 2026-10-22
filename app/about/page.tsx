@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import Link from "next/link";
 
@@ -104,7 +105,7 @@ export default function AboutPage() {
 
       {/* Footer */}
       <footer className="border-t border-stone-800 bg-stone-950 py-8 px-4 text-center text-stone-500 text-xs">
-        <p>© {new Date().getFullYear()} Gwòròg Development Association (GDA). All Rights Reserved.</p>
+        <p>&copy; 2026 Gwòròg Development Association (GDA). All Rights Reserved.</p>
       </footer>
     </div>
   );

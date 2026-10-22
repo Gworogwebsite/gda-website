@@ -251,9 +251,7 @@ export default function MemberDashboard() {
       </main>
 
       {/* FOOTER */}
-      <footer className="border-t border-stone-800 bg-stone-950 py-6 px-4 text-center text-stone-600 text-xs">
-        <p>© {new Date().getFullYear()} Gwòròg Development Association (GDA) • Member Protected Session</p>
-      </footer>
+     <p>&copy; 2026 Gwòròg Development Association (GDA) • Member Protected Session</p>
     </div>
   );
 }

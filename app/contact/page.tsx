@@ -1,5 +1,5 @@
-
 "use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
 
@@ -54,7 +54,7 @@ export default function ContactPage() {
           {/* Contact Details Card */}
           <div className="p-8 rounded-2xl bg-stone-900 border border-stone-800 space-y-6">
             <h2 className="text-xl font-bold text-white border-b border-stone-800 pb-4">
-              National Secretariat & Official Offices
+              National Secretariat &amp; Official Offices
             </h2>
 
             <div className="space-y-5 text-sm text-stone-300">
@@ -176,7 +176,7 @@ export default function ContactPage() {
 
       {/* Footer */}
       <footer className="border-t border-stone-800 bg-stone-950 py-8 px-4 text-center text-stone-500 text-xs">
-        <p>© {new Date().getFullYear()} Gwòròg Development Association (GDA). All Rights Reserved.</p>
+        <p>&copy; 2026 Gwòròg Development Association (GDA). All Rights Reserved.</p>
       </footer>
     </div>
   );
