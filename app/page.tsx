@@ -7,15 +7,10 @@ export default function HomePage() {
       
       {/* 1. TOP ANNOUNCEMENT TICKER (Scrolling Left to Right) */}
       <div className="bg-emerald-950/95 text-emerald-200 text-xs py-2.5 border-b border-emerald-800/60 overflow-hidden relative w-full">
-        {/* Inline CSS Keyframe Animation for Left-to-Right Scrolling */}
         <style>{`
           @keyframes scrollLeftToRight {
-            0% {
-              transform: translateX(-100%);
-            }
-            100% {
-              transform: translateX(100vw);
-            }
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
           }
           .ticker-left-to-right {
             display: inline-block;
@@ -32,15 +27,14 @@ export default function HomePage() {
           Preparation for the upcoming Afan National Festival &amp; Annual Membership Verification is now underway.
           <span className="mx-8 text-emerald-600 font-bold">•</span>
           <span className="font-bold text-emerald-300 mr-2">📢 Official Notice:</span>
-          Preparation for the upcoming Afan National Festival 2027 is in progress &amp; Annual Membership Verification is now underway.
+          Preparation for the upcoming Afan National Festival &amp; Annual Membership Verification is now underway.
         </div>
       </div>
 
-      {/* 2. NAVIGATION BAR */}
+      {/* 2. NAVIGATION BAR WITH TRANSPARENCY LINK */}
       <header className="border-b border-stone-800 sticky top-0 z-50 bg-stone-950/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
-          {/* Logo & Identity */}
           <Link href="/" className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-full bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 font-extrabold flex items-center justify-center text-lg shadow-inner">
               GDA
@@ -64,14 +58,16 @@ export default function HomePage() {
               About GDA
             </Link>
             <Link href="/history" className="hover:text-emerald-400 transition-colors">
-              History & Heritage
+              History &amp; Heritage
+            </Link>
+            <Link href="/transparency" className="hover:text-emerald-400 transition-colors font-semibold text-emerald-300">
+              Transparency
             </Link>
             <Link href="/contact" className="hover:text-emerald-400 transition-colors">
               Contact
             </Link>
           </nav>
 
-          {/* Authentication Action Buttons */}
           <div className="flex items-center gap-3">
             <Link
               href="/login"
@@ -126,7 +122,7 @@ export default function HomePage() {
           
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs uppercase font-extrabold tracking-widest text-emerald-400">
-              Community Funding & Accountability
+              Community Funding &amp; Accountability
             </h2>
             <p className="mt-2 text-3xl font-black text-white">
               GDA Sustainable Development Pillars
@@ -144,7 +140,7 @@ export default function HomePage() {
                   Priority Project
                 </span>
                 <h3 className="text-xl font-bold text-white mt-2">
-                  Kagoro Community Clean Water & Solar Infrastructure
+                  Kagoro Community Clean Water &amp; Solar Infrastructure
                 </h3>
                 <p className="text-xs text-stone-400 mt-1">
                   Solar boreholes and reticulation across high-demand wards in Gwòròg.
@@ -156,7 +152,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Metrics Breakdown */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6 text-center">
               <div className="p-4 rounded-xl bg-stone-950 border border-stone-800">
                 <span className="text-xs text-stone-400 block uppercase">Raised So Far</span>
@@ -172,7 +167,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Progress Bar */}
             <div className="w-full bg-stone-950 h-3 rounded-full overflow-hidden border border-stone-800">
               <div className="bg-gradient-to-r from-emerald-600 to-teal-400 h-full rounded-full w-[62.5%]"></div>
             </div>
@@ -180,15 +174,15 @@ export default function HomePage() {
             <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-400">
               <span>Verified and monitored under GDA Transparency Portal guidelines.</span>
               <Link
-                href="/login"
+                href="/pay?purpose=water-project"
                 className="font-bold text-emerald-400 hover:text-emerald-300 underline"
               >
-                Log in to Sponsor this Project →
+                Sponsor this Project Online →
               </Link>
             </div>
           </div>
 
-          {/* 3 REVENUE CHANNELS GRID */}
+          {/* 3 REVENUE CHANNELS */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-6 rounded-2xl bg-stone-900/60 border border-stone-800 hover:border-emerald-800/60 transition-all flex flex-col justify-between">
               <div>
@@ -201,10 +195,10 @@ export default function HomePage() {
                 </p>
               </div>
               <Link
-                href="/register"
+                href="/pay?purpose=dues"
                 className="mt-6 text-xs uppercase tracking-wider font-bold text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1"
               >
-                Register & Pay Dues →
+                Pay Annual Dues →
               </Link>
             </div>
 
@@ -237,10 +231,10 @@ export default function HomePage() {
                 </p>
               </div>
               <Link
-                href="/contact"
+                href="/pay?purpose=afan-vendor"
                 className="mt-6 text-xs uppercase tracking-wider font-bold text-amber-400 hover:text-amber-300 inline-flex items-center gap-1"
               >
-                Partner With Us →
+                Book Vendor Stall →
               </Link>
             </div>
           </div>
@@ -248,88 +242,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. AFAN FESTIVAL & HERITAGE SPOTLIGHT */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-stone-800 bg-stone-950">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">
-              Living Cultural Heritage
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mt-2 leading-tight">
-              The Historic Afan National Festival
-            </h2>
-            <p className="mt-4 text-sm text-stone-400 leading-relaxed">
-              Every 1st of January, the majestic Kagoro Hills welcome dignitaries, sons, daughters, and tourists from across the globe to celebrate the conquest of the hills and the bountiful harvest.
-            </p>
-            <p className="mt-3 text-sm text-stone-400 leading-relaxed">
-              Under the custody of the Gwòròg Traditional Council (His Highness the Chief of Kagoro) and GDA, the festival remains a powerhouse for cultural tourism and community solidarity.
-            </p>
-            <div className="mt-8 flex gap-4">
-              <Link
-                href="/history"
-                className="px-5 py-3 rounded-lg bg-stone-900 border border-stone-700 text-stone-200 text-xs font-bold uppercase tracking-wider hover:border-emerald-500 transition-colors"
-              >
-                Read Gwòròg History
-              </Link>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-stone-800 bg-stone-900/70 p-8 space-y-5">
-            <h3 className="text-lg font-bold text-white border-b border-stone-800 pb-3">
-              Association Wings & Organs
-            </h3>
-            <div className="space-y-4 text-xs text-stone-300">
-              <div className="flex items-start gap-3">
-                <span className="text-emerald-400 font-bold">●</span>
-                <div>
-                  <strong className="text-white block">National Executive Council (NEC)</strong>
-                  Elected stewards leading administrative coordination and strategic community development.
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-emerald-400 font-bold">●</span>
-                <div>
-                  <strong className="text-white block">Board of Trustees (BOT)</strong>
-                  Constitutional custodians offering visionary oversight and operational guidance.
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-emerald-400 font-bold">●</span>
-                <div>
-                  <strong className="text-white block">Traditional Council Linkage</strong>
-                  Working in close synergy with His Highness, Title Holders, District, Village, and Ward Heads.
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-emerald-400 font-bold">●</span>
-                <div>
-                  <strong className="text-white block">Youth & Women Wings</strong>
-                  Driving grassroots mobilization, skills acquisition, and community security.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FOOTER */}
+      {/* 5. FOOTER */}
       <footer className="mt-auto border-t border-stone-800 bg-stone-950 py-12 px-4 sm:px-6 lg:px-8 text-stone-500 text-xs">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
             <span className="text-white font-bold block text-sm">
               Gwòròg Development Association (GDA)
             </span>
-            <p className="mt-1">Official Digital Community & Administrative Portal</p>
+            <p className="mt-1">Official Digital Community &amp; Administrative Portal</p>
           </div>
           <div className="flex items-center gap-6">
             <Link href="/about" className="hover:text-stone-300 transition-colors">About</Link>
             <Link href="/history" className="hover:text-stone-300 transition-colors">History</Link>
+            <Link href="/transparency" className="hover:text-stone-300 transition-colors">Transparency</Link>
             <Link href="/contact" className="hover:text-stone-300 transition-colors">Contact</Link>
             <Link href="/login" className="hover:text-stone-300 transition-colors">Member Portal</Link>
           </div>
           <div className="text-center md:text-right">
             <p>&copy; 2026 GDA. All Rights Reserved.</p>
-            <p className="text-[10px] text-stone-600 mt-1">Built with Next.js & Firebase (Free Tier Architecture)</p>
+            <p className="text-[10px] text-stone-600 mt-1">Built with Next.js &amp; Firebase (Free Tier Architecture)</p>
           </div>
         </div>
       </footer>

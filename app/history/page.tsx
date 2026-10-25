@@ -90,3 +90,6 @@ export default function HistoryPage() {
     </div>
   );
 }
+<Link href="/transparency" className="hover:text-emerald-400 transition-colors">
+              Transparency
+            </Link>
