@@ -21,14 +21,12 @@ function PaymentContent() {
   const [processing, setProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState<any | null>(null);
 
-  // Sync amount when payment category changes
   useEffect(() => {
     if (paymentType === "dues") setCustomAmount("2000");
     else if (paymentType === "afan-vendor") setCustomAmount("15000");
     else if (paymentType === "water-project") setCustomAmount("10000");
   }, [paymentType]);
 
-  // Load authenticated member details if logged in
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -50,13 +48,11 @@ function PaymentContent() {
     return () => unsubscribe();
   }, []);
 
-  // Save successful payment to Firestore
   const recordPaymentSuccess = async (reference: string) => {
     setProcessing(true);
     try {
       const amountNumber = parseInt(customAmount, 10);
 
-      // 1. Create audit record in 'payments' collection
       await addDoc(collection(db, "payments"), {
         reference: reference,
         amount: amountNumber,
@@ -69,7 +65,6 @@ function PaymentContent() {
         createdAt: serverTimestamp(),
       });
 
-      // 2. If it's Annual Dues and user is logged in, mark dues as Paid
       if (paymentType === "dues" && currentUser) {
         const userDocRef = doc(db, "users", currentUser.uid);
         await updateDoc(userDocRef, {
@@ -81,7 +76,7 @@ function PaymentContent() {
         reference: reference,
         amount: amountNumber,
         purpose: paymentType,
-        date: new Date().toLocaleDateString(),
+        date: "2026-01-01",
       });
     } catch (err: any) {
       console.error("Firestore logging error:", err);
@@ -91,13 +86,11 @@ function PaymentContent() {
     }
   };
 
-  // Launch Paystack Inline or Test Simulation
   const handlePaystackPayment = (e: React.FormEvent) => {
     e.preventDefault();
     const amountInKobo = parseInt(customAmount, 10) * 100;
     const paystackKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
 
-    // Check if real Paystack popup is available
     if (typeof window !== "undefined" && (window as any).PaystackPop && paystackKey && !paystackKey.includes("sample")) {
       const handler = (window as any).PaystackPop.setup({
         key: paystackKey,
@@ -119,7 +112,6 @@ function PaymentContent() {
       });
       handler.openIframe();
     } else {
-      // Fallback: Sandbox Test Mode Simulator (allows zero-cost testing immediately!)
       const testRef = "TEST-GDA-" + Math.floor(Math.random() * 10000000 + 1);
       const confirmSimulation = window.confirm(
         `[Paystack Test Sandbox]\nSimulate payment of ₦${parseInt(customAmount, 10).toLocaleString()} for ${paymentType}?\n\nClick OK to simulate a successful payment.`
@@ -132,11 +124,8 @@ function PaymentContent() {
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans">
-      
-      {/* Paystack Inline Script from official CDN */}
       <Script src="https://js.paystack.co/v1/inline.js" strategy="lazyOnload" />
 
-      {/* Navigation */}
       <header className="border-b border-stone-800 bg-stone-950/90 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
@@ -155,10 +144,7 @@ function PaymentContent() {
         </div>
       </header>
 
-      {/* Main Body */}
       <main className="max-w-3xl mx-auto px-4 py-12 flex-1 w-full">
-        
-        {/* SUCCESS RECEIPT VIEW */}
         {paymentSuccess ? (
           <div className="p-8 rounded-2xl bg-stone-900 border border-emerald-600/50 shadow-2xl text-center space-y-6">
             <div className="w-16 h-16 rounded-full bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-3xl mx-auto">
@@ -184,8 +170,8 @@ function PaymentContent() {
                 <span className="text-white font-bold text-sm">₦{paymentSuccess.amount.toLocaleString()}</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-stone-400">Date:</span>
-                <span className="text-stone-300">{paymentSuccess.date}</span>
+                <span className="text-stone-400">Status:</span>
+                <span className="text-emerald-400 font-semibold">Confirmed &amp; Recorded</span>
               </div>
             </div>
 
@@ -205,7 +191,6 @@ function PaymentContent() {
             </div>
           </div>
         ) : (
-          /* PAYMENT FORM VIEW */
           <div className="p-8 rounded-2xl bg-stone-900/80 border border-emerald-800/40 shadow-2xl space-y-6">
             <div className="border-b border-stone-800 pb-4">
               <span className="text-xs uppercase tracking-widest text-emerald-400 font-bold">GDA Revenue &amp; Dues Collection</span>
@@ -216,8 +201,6 @@ function PaymentContent() {
             </div>
 
             <form onSubmit={handlePaystackPayment} className="space-y-5 text-xs">
-              
-              {/* Category Selection */}
               <div>
                 <label className="block text-stone-300 uppercase tracking-wider mb-2 font-medium">
                   Select Contribution Type
@@ -277,7 +260,6 @@ function PaymentContent() {
                 </div>
               </div>
 
-              {/* Amount */}
               <div>
                 <label className="block text-stone-300 uppercase tracking-wider mb-1 font-medium">
                   Amount (₦ Naira)
@@ -293,7 +275,6 @@ function PaymentContent() {
                 />
               </div>
 
-              {/* Payer Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-stone-300 uppercase tracking-wider mb-1 font-medium">Full Name</label>
@@ -332,7 +313,6 @@ function PaymentContent() {
                 />
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={processing}
@@ -351,10 +331,8 @@ function PaymentContent() {
             </form>
           </div>
         )}
-
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-stone-800 bg-stone-950 py-6 px-4 text-center text-stone-600 text-xs">
         <p>&copy; 2026 Gwòròg Development Association • Official Financial Gateway</p>
       </footer>
