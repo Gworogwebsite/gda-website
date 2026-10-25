@@ -145,7 +145,7 @@ export default function MemberDashboard() {
           </div>
         </div>
 
-        {/* 3 ACTION CARDS DIRECTLY LINKED TO /pay */}
+        {/* 3 ACTION CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card 1: Annual Dues */}
