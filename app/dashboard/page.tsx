@@ -24,18 +24,15 @@ export default function MemberDashboard() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Authentication Listener & Profile Loader
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        // Not logged in -> Redirect to login page
         router.push("/login");
         return;
       }
 
       setCurrentUser(user);
 
-      // Fetch user profile from Firestore 'users' collection
       try {
         const userDocRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(userDocRef);
@@ -43,7 +40,6 @@ export default function MemberDashboard() {
         if (docSnap.exists()) {
           setProfile(docSnap.data() as UserProfile);
         } else {
-          // Fallback default profile if document is pending
           setProfile({
             fullName: user.displayName || "Gwòròg Member",
             email: user.email || "",
@@ -64,7 +60,6 @@ export default function MemberDashboard() {
     return () => unsubscribe();
   }, [router]);
 
-  // Handle Sign Out
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -74,7 +69,6 @@ export default function MemberDashboard() {
     }
   };
 
-  // Loading Screen
   if (loading) {
     return (
       <div className="min-h-screen bg-stone-950 flex flex-col items-center justify-center text-stone-200">
@@ -92,7 +86,6 @@ export default function MemberDashboard() {
       {/* 1. TOP DASHBOARD NAVIGATION */}
       <header className="border-b border-stone-800 bg-stone-950/90 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          
           <Link href="/" className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 font-extrabold flex items-center justify-center text-sm shadow-inner">
               GDA
@@ -121,7 +114,6 @@ export default function MemberDashboard() {
               Sign Out
             </button>
           </div>
-
         </div>
       </header>
 
@@ -153,10 +145,10 @@ export default function MemberDashboard() {
           </div>
         </div>
 
-        {/* 3 COLUMNS: STATUS / DUES / NOTICEBOARD */}
+        {/* 3 ACTION CARDS DIRECTLY LINKED TO /pay */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Card 1: Dues Status */}
+          {/* Card 1: Annual Dues */}
           <div className="p-6 rounded-2xl bg-stone-900 border border-stone-800 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
@@ -170,12 +162,19 @@ export default function MemberDashboard() {
                 Your annual contribution sustains community water facilities, youth bursaries, and cultural programs.
               </p>
             </div>
-            <button
-              onClick={() => alert("Payment Gateway (Paystack) will be activated in Step 18!")}
-              className="mt-6 w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all shadow-md"
-            >
-              Pay Dues Online (Step 18)
-            </button>
+            
+            {profile?.duesStatus === "Paid" ? (
+              <div className="mt-6 py-2.5 bg-emerald-950/80 border border-emerald-700/60 text-emerald-300 text-center font-bold text-xs uppercase tracking-wider rounded-lg">
+                ✓ Dues Paid for 2026
+              </div>
+            ) : (
+              <Link
+                href="/pay?purpose=dues"
+                className="mt-6 block text-center w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all shadow-md"
+              >
+                Pay Annual Dues Online (₦2,000)
+              </Link>
+            )}
           </div>
 
           {/* Card 2: Community Water Project */}
@@ -190,12 +189,12 @@ export default function MemberDashboard() {
                 Solar borehole reticulation across Gwòròg communities. ₦6.25M raised of ₦10M target.
               </p>
             </div>
-            <button
-              onClick={() => alert("Project Sponsorship will be linked to Paystack in Step 18!")}
-              className="mt-6 w-full py-2.5 bg-stone-800 hover:bg-stone-700 border border-stone-700 text-stone-200 font-bold text-xs uppercase tracking-wider rounded-lg transition-all"
+            <Link
+              href="/pay?purpose=water-project"
+              className="mt-6 block text-center w-full py-2.5 bg-stone-800 hover:bg-stone-700 border border-stone-700 text-stone-200 font-bold text-xs uppercase tracking-wider rounded-lg transition-all"
             >
-              Sponsor Project
-            </button>
+              Sponsor Water Project
+            </Link>
           </div>
 
           {/* Card 3: Afan Festival Desk */}
@@ -205,17 +204,17 @@ export default function MemberDashboard() {
                 <span className="text-xs uppercase tracking-wider text-stone-400 font-semibold">Afan Festival</span>
                 <span className="text-xs text-amber-400 font-bold">Annual 1st Jan</span>
               </div>
-              <h3 className="text-base font-bold text-white">Vendor & Volunteer Hub</h3>
+              <h3 className="text-base font-bold text-white">Vendor &amp; Stall Permit</h3>
               <p className="text-xs text-stone-400 mt-2 leading-relaxed">
-                Register a commercial stand, cultural exhibition stall, or volunteer for logistics and security.
+                Book a commercial stall or sponsor cultural festival activities.
               </p>
             </div>
-            <button
-              onClick={() => alert("Vendor & Volunteer registration form will be opened!")}
-              className="mt-6 w-full py-2.5 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-300 font-bold text-xs uppercase tracking-wider rounded-lg transition-all"
+            <Link
+              href="/pay?purpose=afan-vendor"
+              className="mt-6 block text-center w-full py-2.5 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-300 font-bold text-xs uppercase tracking-wider rounded-lg transition-all"
             >
-              Vendor / Volunteer Registration
-            </button>
+              Book Vendor Permit (₦15,000)
+            </Link>
           </div>
 
         </div>
@@ -228,7 +227,7 @@ export default function MemberDashboard() {
           <div className="space-y-3 text-xs">
             <div className="p-4 rounded-xl bg-stone-950 border border-stone-800/80">
               <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-white">General Congress & NEC Quarterly Briefing</span>
+                <span className="font-bold text-white">General Congress &amp; NEC Quarterly Briefing</span>
                 <span className="text-stone-500">Upcoming</span>
               </div>
               <p className="text-stone-400">
@@ -238,7 +237,7 @@ export default function MemberDashboard() {
 
             <div className="p-4 rounded-xl bg-stone-950 border border-stone-800/80">
               <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-white">Gwòròg Literacy & Bible Translation Committee</span>
+                <span className="font-bold text-white">Gwòròg Literacy &amp; Bible Translation Committee</span>
                 <span className="text-stone-500">Active</span>
               </div>
               <p className="text-stone-400">
@@ -251,7 +250,9 @@ export default function MemberDashboard() {
       </main>
 
       {/* FOOTER */}
-     <p>&copy; 2026 Gwòròg Development Association (GDA) • Member Protected Session</p>
+      <footer className="border-t border-stone-800 bg-stone-950 py-6 px-4 text-center text-stone-600 text-xs">
+        <p>&copy; 2026 Gwòròg Development Association (GDA) • Member Protected Session</p>
+      </footer>
     </div>
   );
 }
