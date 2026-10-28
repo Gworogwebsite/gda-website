@@ -60,9 +60,9 @@ export default function RegisterPage() {
         phone: phone.trim(),
         district: district,
         wing: wing,
-        role: "MEMBER", // Default role; NEC/BOT/Admin roles are assigned by Admin Hub
+        role: "MEMBER",
         duesStatus: "Unpaid",
-        membershipStatus: "Active",
+        membershipStatus: "Pending Approval", // <-- ENSURE THIS SAYS "Pending Approval"
         createdAt: serverTimestamp(),
       });
 

@@ -1,53 +1,117 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase"; // points to app/firebase.js
 
-interface LogoProps {
-  size?: "sm" | "md" | "lg";
-}
+export default function Navigation() {
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-export default function Logo({ size = "md" }: LogoProps) {
-  const [imageError, setImageError] = useState(false);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setCurrentUser(user);
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const userDocSnap = await getDoc(userDocRef);
 
-  // Dimension presets
-  const dimensions = {
-    sm: "w-10 h-10 text-sm",
-    md: "w-13 h-13 text-base",
-    lg: "w-16 h-16 text-xl",
-  };
+          if (userDocSnap.exists()) {
+            const data = userDocSnap.data();
+            setUserRole(data.role || "member");
+          }
+        } catch (err) {
+          console.error("Error reading role:", err);
+          setUserRole("member");
+        }
+      } else {
+        setCurrentUser(null);
+        setUserRole(null);
+      }
+      setLoading(false);
+    });
 
-  const pixelSizes = {
-    sm: 40,
-    md: 52,
-    lg: 64,
-  };
+    return () => unsubscribe();
+  }, []);
+
+  const isPrivileged =
+    userRole === "super_admin" ||
+    userRole === "secretariat" ||
+    userRole === "admin";
 
   return (
-    <div
-      className={`relative inline-flex items-center justify-center rounded-full p-1 
-        bg-gradient-to-br from-[#8A1A31] via-[#4A0D1A] to-[#120407] 
-        border-2 border-[#EADCC8]/40 
-        shadow-[inset_0_2px_4px_rgba(255,255,255,0.35),0_6px_15px_rgba(0,0,0,0.7)] 
-        transition-transform duration-300 hover:scale-105 ${dimensions[size]}`}
-      title="Gwòròg Development Association"
-    >
-      {/* If your logo.png exists in public/logo.png, it displays here */}
-      {!imageError ? (
-        <Image
-          src="/logo.png"
-          alt="GDA Crest"
-          width={pixelSizes[size]}
-          height={pixelSizes[size]}
-          className="w-full h-full object-contain rounded-full filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        /* Fallback embossed text badge if logo.png is not yet in public folder */
-        <span className="font-black tracking-wider text-[#FDFBF7] drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)]">
-          GDA
-        </span>
-      )}
-    </div>
+    <nav className="bg-[#0f2e1b] border-b border-[#EADCC8]/20 px-6 py-4 text-white flex items-center justify-between">
+      {/* Brand & Left Navigation Links */}
+      <div className="flex items-center gap-6">
+        <Link href="/" className="font-extrabold text-lg text-[#EADCC8] tracking-tight">
+          GDA National
+        </Link>
+        <Link href="/" className="text-sm hover:text-[#EADCC8] transition">
+          Home
+        </Link>
+        <Link href="/about" className="text-sm hover:text-[#EADCC8] transition">
+          About GDA
+        </Link>
+        <Link href="/history" className="text-sm hover:text-[#EADCC8] transition">
+          History & Heritage
+        </Link>
+        <Link href="/transparency" className="text-sm hover:text-[#EADCC8] transition">
+          Transparency
+        </Link>
+        <Link href="/contact" className="text-sm hover:text-[#EADCC8] transition">
+          Contact
+        </Link>
+      </div>
+
+      {/* Right Action Links */}
+      <div className="flex items-center gap-3">
+        {/* 🔥 SUPER ADMIN TAB: Only renders if logged in as super_admin, secretariat, or admin */}
+        {!loading && isPrivileged && (
+          <Link
+            href="/super-admin"
+            className="flex items-center gap-1.5 bg-amber-400 text-black font-black text-xs px-3 py-1.5 rounded-lg shadow-md hover:bg-amber-300 transition-all border border-amber-200 uppercase tracking-wider"
+          >
+            <span>🛡️</span>
+            <span>Super Admin</span>
+          </Link>
+        )}
+
+        {!currentUser ? (
+          <>
+            <Link
+              href="/login"
+              className="text-xs bg-black/40 border border-[#EADCC8]/30 px-3 py-1.5 rounded-lg hover:bg-white/10 font-bold"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/register"
+              className="text-xs bg-[#8B1E3F] text-white px-3.5 py-1.5 rounded-lg hover:bg-[#a02349] font-bold"
+            >
+              Join GDA
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link
+              href="/dashboard"
+              className="text-xs border border-[#EADCC8]/40 px-3 py-1.5 rounded-lg hover:bg-[#EADCC8]/10 text-[#EADCC8] font-bold"
+            >
+              My Dashboard
+            </Link>
+            <button
+              onClick={() => signOut(auth)}
+              className="text-xs text-rose-300 hover:text-rose-100 font-semibold px-2 py-1"
+            >
+              Sign Out
+            </button>
+          </>
+        )}
+      </div>
+    </nav>
   );
 }

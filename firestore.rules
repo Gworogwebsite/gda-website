@@ -1,77 +1,31 @@
-code
-JavaScript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper functions to check authentication and roles cleanly
-    function isSignedIn() {
-      return request.auth != null;
+    
+    // Function to check if requester is Super Admin or Secretariat
+    function isSuperAdmin() {
+      return request.auth != null && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['super_admin', 'secretariat']);
     }
 
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-
-    function getUserData() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
-    }
-
-    function isAdminOrNEC() {
-      return isSignedIn() && 
-        (getUserData().role == 'admin' || getUserData().role == 'NEC' || getUserData().role == 'BOT');
-    }
-
-    // 1. Users Collection (Member Profiles & Roles)
     match /users/{userId} {
-      // Any authenticated user can read profiles; admins/NEC can read all
-      allow read: if isSignedIn();
-
-      // Users can create their own profile during registration (Step 11)
-      allow create: if isOwner(userId);
-
-      // Members can update their personal details (phone, district, wing),
-      // but only Admin/NEC can alter roles or dues statuses.
-      allow update: if isAdminOrNEC() || (
-        isOwner(userId) && 
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'duesStatus', 'membershipStatus'])
+      // Any authenticated user can read their own profile; Super Admin can read all
+      allow read: if request.auth != null && (request.auth.uid == userId || isSuperAdmin());
+      
+      // Allow user creation on register, but default role cannot be set to super_admin
+      allow create: if request.auth != null && request.resource.data.role == 'member';
+      
+      // Standard members can update their own phone/address, but CANNOT modify their own 'role' field
+      allow update: if request.auth != null && (
+        isSuperAdmin() || 
+        (request.auth.uid == userId && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']))
       );
-
-      // Only administrators can delete member records
-      allow delete: if isAdminOrNEC();
     }
 
-    // 2. Announcements & News Feed
-    match /announcements/{announcementId} {
-      // Anyone (even public visitors on homepage) can view official announcements
-      allow read: if true;
-      // Only NEC and Admin can publish or edit official announcements
-      allow write: if isAdminOrNEC();
-    }
-
-    // 3. Community Projects & Transparency Portal
+    // Projects and Transparency collections
     match /projects/{projectId} {
-      // Publicly readable so all sons and daughters of Gwòròg can see progress
-      allow read: if true;
-      // Only Admin or NEC can add projects, set targets, or update amounts
-      allow write: if isAdminOrNEC();
-    }
-
-    // 4. Financial Ledgers, Dues & Vendor Registrations
-    match /payments/{paymentId} {
-      // A member can see their own payment history; Admin/NEC can see all
-      allow read: if isSignedIn() && (
-        resource.data.userId == request.auth.uid || isAdminOrNEC()
-      );
-      // Writes happen either via authenticated users submitting receipts or Admins reconciling
-      allow create: if isSignedIn();
-      allow update, delete: if isAdminOrNEC();
-    }
-
-    // 5. Traditional Council & Leadership Records
-    match /traditionalCouncil/{docId} {
-      allow read: if true;
-      allow write: if isAdminOrNEC();
+      allow read: if true; // Public can see transparency projects
+      allow write: if isSuperAdmin(); // Only Super Admin/Secretariat can add/edit projects
     }
   }
 }
